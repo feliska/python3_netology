@@ -19,8 +19,6 @@ with open('cook_book.txt') as cookbook:
         blank_line = cookbook.readline()
 
 
-    print(cook_book)
-
 def get_shop_list_by_dishes(dishes, people_count):
     shop_list = {}
     for dish in dishes:
