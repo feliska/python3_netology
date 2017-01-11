@@ -1,3 +1,8 @@
+import re
+
+# компиляция выражения для удаления лишних пробельных символов
+reg = re.compile('^\s|\s$')
+
 with open('cook_book.txt') as cookbook:
     cook_book = {}
     for line in cookbook:
@@ -7,8 +12,12 @@ with open('cook_book.txt') as cookbook:
         cook_book[dish] = {'ingredients': ingredients}
 
         for count in range(ingredients_count):
-            # использование 2х replace подряд смущает немного
-            ingredients_of_dish = list(map(str, cookbook.readline().replace("\n", '').replace(" ", '').split('|')))
+            ingr_line = cookbook.readline().split('|')
+            ingredients_of_dish = []
+            # заменила 2 реплейса на цикл с удалением ненужных знаков по регулярке
+            for i in ingr_line:
+                ingr = reg.sub('', i)
+                ingredients_of_dish.append(ingr)
             includes = {
                 'product': ingredients_of_dish[0],
                 'quantity': int(ingredients_of_dish[1]),
@@ -36,25 +45,26 @@ def print_shop_list(shop_list):
     for key, shop_list_item in shop_list.items():
         print("{product} {quantity} {unit}".format(**shop_list_item))
 
-def create_shop_list(people_count, first_dish, second_dish, third_dish):
-    # получить блюда из кулинарной книги
-    dish1 = cook_book[first_dish]
-    dish2 = cook_book[second_dish]
-    dish3 = cook_book[third_dish]
-    dishes = [dish1, dish2, dish3]
+def create_shop_list(people_count, dishes):
     #заполнили список покупок
     shop_list = get_shop_list_by_dishes(dishes, people_count)
     # Вывести список покупок
     print_shop_list(shop_list)
 
-print('Выберите первое блюдо: ')
-first_dish = input().lower()
-print('Выберите второе блюдо: ')
-second_dish = input().lower()
-print('Выберите третье блюдо: ')
-third_dish = input().lower()
+dishes = []
+print('Введите название блюда. Для окончания выбора введите "exit"')
+while True:
+    dish_select = input().lower()
+    if dish_select == 'exit':
+        break
+    elif dish_select in cook_book:
+        dishes.append(cook_book[dish_select])
+    elif dish_select not in cook_book:
+        print('Такого блюда нет в поваренной книге')
+
+
 print('На сколько человек?')
 people_count = int(input())
 
 print('Список покупок: ')
-create_shop_list(people_count, first_dish, second_dish, third_dish)
+create_shop_list(people_count, dishes)
