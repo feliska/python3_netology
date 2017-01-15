@@ -1,0 +1,45 @@
+{
+	"омлет":
+	{
+		"ingredients":
+		[
+			{"product": "Яйца", "quantity": 2, "unit": "шт"},
+			{"product": "Молоко", "quantity": 50, "unit": "мл"},
+			{"product": "Помидор", "quantity": 100, "unit": "г"}
+		]
+	},
+	"кисель":
+	{
+		"ingredients":
+		[
+			{"product": "Вода", "quantity": 100, "unit": "мл"}, 
+			{"product": "Ягоды", "quantity": 200, "unit": "г"}, 
+			{"product": "Крохмал", "quantity": 10, "unit": "г"}
+		]
+	}, 
+	"яблочный пирог": 
+	{
+		"ingredients": 
+		[
+			{"product": "Яйца", "quantity": 1, "unit": "шт"}, 
+			{"product": "Мука", "quantity": 300, "unit": "г"}, 
+			{"product": "Масло", "quantity": 60, "unit": "г"}, 
+			{"product": "Яблоки", "quantity": 80, "unit": "г"}
+		]
+	}, 
+	"карамель": 
+	{
+		"ingredients": 
+		[
+			{"product": "Сахарный песок", "quantity": 100, "unit": "г"}
+		]
+	},
+	"суп": 
+	{
+		"ingredients": 
+		[
+			{"product": "Вода", "quantity": 100, "unit": "мл"}, 
+			{"product": "Помидор", "quantity": 300, "unit": "г"}
+		]
+	}
+}
