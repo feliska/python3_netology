@@ -27,8 +27,11 @@ print(greater_six_words)
 print(len(greater_six_words))
 
 # # print(Counter(all_news_words))
-# dict_count = dict(Counter(all_news_words))
-# print(dict_count)
-# l = lambda x: len(x[0]) > 6
-# a = sorted(dict_count.items(), key=l)
-# print(a)
+dict_count = dict(Counter(greater_six_words))
+a = sorted(dict_count.items(), key=lambda item: item[1], reverse=True)
+print(a)
+for k, v in a[0:10]:
+    print(k, end=' ')
+# не забыть по title для новостей!
+
+
