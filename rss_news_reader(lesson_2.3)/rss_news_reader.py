@@ -38,10 +38,10 @@ def print_main_ten_words(file_name, encoding_type):
     news_rss = open_file_with_encoding(file_name, encoding_type)
     greater_six_words = get_news_words_from_rss(news_rss)
     # подсчет повторений и сортировка по убыванию
-    dict_count = dict(Counter(greater_six_words))
-    main_words = sorted(dict_count.items(), key=lambda item: item[1], reverse=True)
-    for k, v in main_words[0:10]:
+    dict_count = Counter(greater_six_words).most_common(10)
+    for k, v in dict_count:
         print(k, end=' ')
+
 
 print_main_ten_words('newsafr.json', "utf8")
 print_main_ten_words('newscy.json', "koi8_r")
