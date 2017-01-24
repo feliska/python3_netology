@@ -19,7 +19,7 @@ def get_news_words_from_rss(news_rss):
     all_news_words = []
     greater_six_words = []
     for news in news_rss['rss']['channel']['item']:
-        # обработка для файлов с разной структурой. newsit.json отличается от остальных
+        # обработка для файлов с разной структурой. newsit.json отличается
         try:
             tags_removed = tags.sub('', news['description']['__cdata'])
         except TypeError:
@@ -28,9 +28,9 @@ def get_news_words_from_rss(news_rss):
         all_news_words.extend(words)
     # удаление слов длиной меньше шести символов
     for word in all_news_words:
-        wordw = reg.sub('', word)
-        if len(wordw) > 6:
-            greater_six_words.append(wordw)
+        word_cleaned = reg.sub('', word)
+        if len(word_cleaned) > 6:
+            greater_six_words.append(word_cleaned)
     return greater_six_words
 
 
