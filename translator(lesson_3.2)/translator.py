@@ -53,10 +53,10 @@ def file_translate(file_name):
     for file_name in files:
         with open(file_name) as f:
             text_for_translate = f.read()
+            print("Переводится:", file_name)
             language = detect_lang(text_for_translate)
             fst_str = "Язык перевода: " + lang_name(language)+'\n'
             scd_str = translate_to_ru(text_for_translate, language, lang_out)
-            print("Переводится:", file_name)
             with open('translated_'+file_name, 'w') as t:
                 t.write(fst_str)
                 t.write(scd_str)
