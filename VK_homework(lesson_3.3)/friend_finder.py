@@ -3,6 +3,10 @@ from urllib.parse import urlencode, urlparse
 import requests
 
 
+def parts(list_of_friends, n=100):
+    return [list_of_friends[i:i + n] for i in range(0, len(list_of_friends), n)]
+
+
 AUTHORIZE_URL = 'https://oauth.vk.com/authorize'
 VERSION = '5.62'
 APP_ID = 5863643
@@ -25,17 +29,33 @@ fragments = dict((i.split('=') for i in o.fragment.split('&')))
 access_token = fragments['access_token']
 # print(access_token)
 
+my_user_id = 1140044
 params = {
     'access_token': access_token,
     'v': VERSION
 }
 # получение списка друзей
-method = 'friends.get'
-response1 = requests.get(api_address + method, params)
-friends_list = response1.json()['response']['items']
-print(friends_list)
+method1 = 'friends.get'
 
-for user_id in friends_list:
-    user = requests.get(api_address+'users.get', {'user_id': user_id})
-    response = requests.get(api_address+method, {'user_id': user_id})
-    print(user.json(), response.json())
+response1 = requests.get(api_address + method1, params)
+my_friends_list = response1.json()['response']['items']
+
+# поиск общих друзей
+method2 = 'friends.getMutual'
+
+for i in parts(my_friends_list):
+    target_uids_list = ', '.join(map(str, i))
+    params = {
+        'access_token': access_token,
+        'source_uid': my_user_id,
+        'target_uids': target_uids_list,
+        'v': VERSION
+    }
+
+    response2 = requests.get(api_address + method2, params)
+    print(target_uids_list)
+    pprint(response2.json())
+
+
+
+
