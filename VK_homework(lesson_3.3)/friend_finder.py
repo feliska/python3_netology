@@ -20,14 +20,7 @@ auth_data = {
     'v': VERSION
 }
 
-# print('?'.join((AUTHORIZE_URL, urlencode(auth_data))))
-
-token_url = 'https://oauth.vk.com/blank.html#access_token=11b48fd7a39975d1ff59d81e33406307a678e697c508eeb7e13cdb66d94d5b1e4dee13d12866c04ec4640&expires_in=86400&user_id=1140044'
-
-o = urlparse(token_url)
-fragments = dict((i.split('=') for i in o.fragment.split('&')))
-access_token = fragments['access_token']
-# print(access_token)
+access_token = '11b48fd7a39975d1ff59d81e33406307a678e697c508eeb7e13cdb66d94d5b1e4dee13d12866c04ec4640'
 
 my_user_id = 1140044
 params = {
