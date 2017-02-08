@@ -20,7 +20,16 @@ auth_data = {
     'v': VERSION
 }
 
-access_token = '11b48fd7a39975d1ff59d81e33406307a678e697c508eeb7e13cdb66d94d5b1e4dee13d12866c04ec4640'
+# print('?'.join((AUTHORIZE_URL, urlencode(auth_data))))
+
+# token_url = 'https://oauth.vk.com/blank.html#access_token=8e777ca1a0e6ad8571680ecc565299519cf9c4ed9f0c7eec245e024706e00d50e2aab1c5f965644f891f1&expires_in=86400&user_id=1140044'
+# # token_url = 'https://oauth.vk.com/blank.html#access_token=11b48fd7a39975d1ff59d81e33406307a678e697c508eeb7e13cdb66d94d5b1e4dee13d12866c04ec4640&expires_in=86400&user_id=1140044'
+#
+# o = urlparse(token_url)
+# fragments = dict((i.split('=') for i in o.fragment.split('&')))
+# access_token = fragments['access_token']
+# print(access_token)
+access_token = '8e777ca1a0e6ad8571680ecc565299519cf9c4ed9f0c7eec245e024706e00d50e2aab1c5f965644f891f1'
 
 my_user_id = 1140044
 params = {
@@ -32,6 +41,10 @@ method1 = 'friends.get'
 
 response1 = requests.get(api_address + method1, params)
 my_friends_list = response1.json()['response']['items']
+# получение списка друзей друзей
+for user_id in my_friends_list:
+    response2 = requests.get(api_address + method1, {'user_id': user_id})
+    print({user_id: response2.json()['response']})
 
 # поиск общих друзей
 method2 = 'friends.getMutual'
@@ -45,9 +58,9 @@ for i in parts(my_friends_list):
         'v': VERSION
     }
 
-    response2 = requests.get(api_address + method2, params)
+    response3 = requests.get(api_address + method2, params)
     print(target_uids_list)
-    pprint(response2.json())
+    pprint(response3.json())
 
 
 
