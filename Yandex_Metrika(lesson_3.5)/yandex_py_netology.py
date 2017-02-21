@@ -50,8 +50,6 @@ class YandexMetrika(object):
         view_count = int(response.json()['data'][0]['metrics'][1])
         user_count = int(response.json()['data'][0]['metrics'][2])
         print("Количество визитов - {}, просмотров - {}, уникальных поситителей - {}".format(visits_count, view_count, user_count))
-        # return visits_count, view_count, user_count
-
 
 
 metrika = YandexMetrika(TOKEN)
