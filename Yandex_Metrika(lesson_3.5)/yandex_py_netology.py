@@ -46,9 +46,9 @@ class YandexMetrika(object):
             'metrics': ['ym:s:visits', 'ym:s:pageviews', 'ym:s:users']
         }
         response = requests.get(url, params, headers=headers)
-        visits_count = int(response.json()['data'][0]['metrics'][0])
-        view_count = int(response.json()['data'][0]['metrics'][1])
-        user_count = int(response.json()['data'][0]['metrics'][2])
+        visits_count = response.json()['data'][0]['metrics'][0]
+        view_count = response.json()['data'][0]['metrics'][1]
+        user_count = response.json()['data'][0]['metrics'][2]
         print("Количество визитов - {}, просмотров - {}, уникальных поситителей - {}".format(visits_count, view_count, user_count))
 
 
