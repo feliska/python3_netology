@@ -2,7 +2,11 @@ import requests
 from pprint import pprint
 from urllib.parse import urlencode, urlparse
 import time
-import vk
+from itertools import chain
+
+
+def list_div(list_for_split, n=25):
+    return [list_for_split[i:i + n] for i in range(0, len(list_for_split), n)]
 
 AUTHORIZE_URL = 'https://oauth.vk.com/authorize'
 VERSION = '5.63'
@@ -31,10 +35,12 @@ response1 = requests.get(api_address + friends_method, params)
 friends_list = response1.json()['response']['items']
 print(len(friends_list))
 
+# получаем количество подписчиков
 followers_method = 'users.getFollowers'
 response2 = requests.get(api_address + followers_method, params)
 followers_count = response2.json()['response']['count']
 
+# получаем список подписчиков
 all_followers = []
 offset_parm = 0
 for i in range(followers_count // 1000 + 1):
@@ -51,39 +57,28 @@ for i in range(followers_count // 1000 + 1):
     offset_parm += 1000
     time.sleep(.200)
 
-print(followers_count)
-print(len(all_followers))
+all_followers.extend(friends_list)
+print(all_followers)
 
-# print(len(followers_list))
+divided_list = list_div(all_followers)
 
-group_method = 'groups.get'
-all_groups = []
-n = 0
-user_id = str(user_id)
-for user_id in friends_list:
-    r = requests.get('https://api.vk.com/method/execute?access_token=' + access_token + '&code=return API.groups.get({"user_id":"'+ str(user_id) +'","count":"3"});')
-    print(r.json())
-# for user_id in friends_list:
-#     params = {
-#         'user_id': user_id,
-#         'access_token': access_token,
-#         'v': VERSION,
-#         'count': "1"
-#     }
-#     # '&code=return API.wall.get({"owner_id":"' + owner_id + '","count":"1"});'
-#     response2 = requests.get(api_address + group_method, params)
-#     group_list = response2.json()['response']['items']
-#     n += 1
-#     print(n)
-#     all_groups.extend(group_list)
-#     print(all_groups)
-#     time.sleep(.200)
+method = 'execute?access_token=' + access_token + '&code='
 
+merge_list = []
+for l in divided_list:
+    code = 'return ['
+    for user_id in l:
+        code = '%s%s' % (code, 'API.groups.get({"user_id":%s}),' % str(user_id))
+    code = '%s%s' % (code, '];')
+    r = requests.get(api_address + method + code).json()['response']
+    # time.sleep(.200)
+    # print(r)
+    for i in r:
+        if type(i) == type(True):
+            r.remove(i)
+        else:
+            merge_list.append(i)
+print(merge_list)
+full_merge_list = sum(merge_list, [])
+print(full_merge_list)
 
-# user_group = vkapi('groups.get', user_id=1140044)
-# print(user_group)
-# for user_id in friends_list:
-#
-#
-#     print(user_id)
-#     print(user_group)
