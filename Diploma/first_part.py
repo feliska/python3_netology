@@ -1,8 +1,7 @@
 import requests
-from pprint import pprint
-from urllib.parse import urlencode, urlparse
+import json
 import time
-from itertools import chain
+from collections import Counter
 
 
 def list_div(list_for_split, n=25):
@@ -12,15 +11,6 @@ AUTHORIZE_URL = 'https://oauth.vk.com/authorize'
 VERSION = '5.63'
 APP_ID = 5863643
 api_address = 'https://api.vk.com/method/'
-
-# auth_data = {
-#     'client_id': APP_ID,
-#     'display': 'mobile',
-#     'response_type': 'token',
-#     'scope': 'friends,groups,status,offline',
-#     'v': VERSION
-# }
-
 access_token = '76e01e83604e3f9e6527ab13fb0320d4cefd4fa8424a93c3f6032c1f94096f9d09b7fd1bcd0954a9b54db'
 user_id = 1140044
 params = {
@@ -71,8 +61,6 @@ for l in divided_list:
         code = '%s%s' % (code, 'API.groups.get({"user_id":%s}),' % str(user_id))
     code = '%s%s' % (code, '];')
     r = requests.get(api_address + method + code).json()['response']
-    # time.sleep(.200)
-    # print(r)
     for i in r:
         if type(i) == type(True):
             r.remove(i)
@@ -81,4 +69,24 @@ for l in divided_list:
 print(merge_list)
 full_merge_list = sum(merge_list, [])
 print(full_merge_list)
+top_groups = Counter(full_merge_list).most_common(100)
+print(top_groups)
+top_groups_list = []
+for group, k in top_groups:
+    group_name_method = 'groups.getById'
+    params = {
+        'access_token': access_token,
+        'v': VERSION,
+        'group_id': group,
+        'fields': 'members_count'
+    }
+    response4 = requests.get(api_address + group_name_method, params)
+    name = response4.json()['response'][0]['name']
+    print(name, k)
+    a = {'title': name, 'count': k}
+    top_groups_list.append(a)
+    time.sleep(.200)
+top_100 = json.dumps(top_groups_list, ensure_ascii=False)
+with open("top100.json", 'w') as t:
+    t.write(top_100)
 
