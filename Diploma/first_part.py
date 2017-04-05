@@ -12,7 +12,9 @@ VERSION = '5.63'
 APP_ID = 5863643
 api_address = 'https://api.vk.com/method/'
 access_token = '76e01e83604e3f9e6527ab13fb0320d4cefd4fa8424a93c3f6032c1f94096f9d09b7fd1bcd0954a9b54db'
-user_id = 80491907
+# TODO не забыть сделать input для введения id
+print("Введите id интересующей личности:")
+user_id = input()
 params = {
     'user_id': user_id,
     'access_token': access_token,
@@ -25,7 +27,7 @@ friends_method = 'friends.get'
 response1 = requests.get(api_address + friends_method, params)
 try:
     friends_list = response1.json()['response']['items']
-    print(len(friends_list))
+    print("Количество друзей:", len(friends_list))
 except KeyError:
     friends_list = []
     print("Список друзей закрыт")
@@ -38,10 +40,10 @@ followers_count = response2.json()['response']['count']
 print("Общее количество подписчиков:", followers_count)
 
 # получаем список подписчиков
-# TODO исправить получение списка подписчиков. Добавить получение пола и даты рождения для второй части работы
 # TODO завернуть этот метод в execute иначе будет слишком долго
 all_followers = []
 offset_parm = 0
+print("Получаю список подписчиков...")
 for i in range(followers_count // 1000 + 1):
     params = {
         'user_id': user_id,
@@ -57,15 +59,22 @@ for i in range(followers_count // 1000 + 1):
     time.sleep(.200)
 
 all_followers.extend(friends_list)
-print(all_followers)
-
+# print(all_followers)
+all_followers_count = len(all_followers)
 divided_list = list_div(all_followers)
 
 method = 'execute?access_token=' + access_token + '&code='
-
+print("Обработка групп, в которых состоят подписчики ...")
 merge_list = []
+user_count = 0
 for l in divided_list:
     code = 'return ['
+    user_count += 25
+    remain_to_calc = all_followers_count - user_count
+    if remain_to_calc > 0:
+        print("Осталось обработать %s из %s подписчиков" % (remain_to_calc, all_followers_count))
+    else:
+        print("Обработка почти завершена =))", end='\n')
     for user_id in l:
         code = '%s%s' % (code, 'API.groups.get({"user_id":%s}),' % str(user_id))
     code = '%s%s' % (code, '];')
@@ -75,11 +84,12 @@ for l in divided_list:
             r.remove(i)
         else:
             merge_list.append(i)
-print(merge_list)
+# print(merge_list)
 full_merge_list = sum(merge_list, [])
-print(full_merge_list)
+# print(full_merge_list)
+print("Топ 100 групп, в которых состоят подписчики:", end='\n')
 top_groups = Counter(full_merge_list).most_common(100)
-print(top_groups)
+# print(top_groups)
 top_groups_list = []
 for group, k in top_groups:
     group_name_method = 'groups.getById'
@@ -96,6 +106,7 @@ for group, k in top_groups:
     top_groups_list.append(a)
     time.sleep(.200)
 top_100 = json.dumps(top_groups_list, ensure_ascii=False)
+print('\n'"Формирование файла top100.json", )
 with open("top100.json", 'w') as t:
     t.write(top_100)
 
