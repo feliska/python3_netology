@@ -96,13 +96,12 @@ for group, k in top_groups:
     params = {
         'access_token': access_token,
         'v': VERSION,
-        'group_id': group,
-        'fields': 'members_count'
+        'group_id': group
     }
     response4 = requests.get(api_address + group_name_method, params)
     name = response4.json()['response'][0]['name']
     print(name, k)
-    a = {'title': name, 'count': k}
+    a = {'title': name, 'count': k, 'id': group}
     top_groups_list.append(a)
     time.sleep(.200)
 top_100 = json.dumps(top_groups_list, ensure_ascii=False)
