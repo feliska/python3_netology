@@ -12,25 +12,34 @@ VERSION = '5.63'
 APP_ID = 5863643
 api_address = 'https://api.vk.com/method/'
 access_token = '76e01e83604e3f9e6527ab13fb0320d4cefd4fa8424a93c3f6032c1f94096f9d09b7fd1bcd0954a9b54db'
-user_id = 1140044
+user_id = 80491907
 params = {
     'user_id': user_id,
     'access_token': access_token,
     'v': VERSION
 }
 
+# TODO обработать исключения которые возникают при запрете на получение списка друзей
 # получаем список друзей
 friends_method = 'friends.get'
 response1 = requests.get(api_address + friends_method, params)
-friends_list = response1.json()['response']['items']
-print(len(friends_list))
+try:
+    friends_list = response1.json()['response']['items']
+    print(len(friends_list))
+except KeyError:
+    friends_list = []
+    print("Список друзей закрыт")
 
 # получаем количество подписчиков
+# TODO выводить сколько обработано подписчиков из общего коичества
 followers_method = 'users.getFollowers'
 response2 = requests.get(api_address + followers_method, params)
 followers_count = response2.json()['response']['count']
+print("Общее количество подписчиков:", followers_count)
 
 # получаем список подписчиков
+# TODO исправить получение списка подписчиков. Добавить получение пола и даты рождения для второй части работы
+# TODO завернуть этот метод в execute иначе будет слишком долго
 all_followers = []
 offset_parm = 0
 for i in range(followers_count // 1000 + 1):
@@ -90,3 +99,4 @@ top_100 = json.dumps(top_groups_list, ensure_ascii=False)
 with open("top100.json", 'w') as t:
     t.write(top_100)
 
+# TODO вторая часть - получить 5 первыйх групп и инфу о их подписчиках метод groups.getMembers
