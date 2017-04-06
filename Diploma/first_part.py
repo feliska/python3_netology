@@ -12,7 +12,6 @@ VERSION = '5.63'
 APP_ID = 5863643
 api_address = 'https://api.vk.com/method/'
 access_token = '76e01e83604e3f9e6527ab13fb0320d4cefd4fa8424a93c3f6032c1f94096f9d09b7fd1bcd0954a9b54db'
-# TODO не забыть сделать input для введения id
 print("Введите id интересующей личности:")
 user_id = input()
 params = {
@@ -21,7 +20,6 @@ params = {
     'v': VERSION
 }
 
-# TODO обработать исключения которые возникают при запрете на получение списка друзей
 # получаем список друзей
 friends_method = 'friends.get'
 response1 = requests.get(api_address + friends_method, params)
