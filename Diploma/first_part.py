@@ -7,7 +7,7 @@ from collections import Counter
 def list_div(list_for_split, n=25):
     return [list_for_split[i:i + n] for i in range(0, len(list_for_split), n)]
 
-AUTHORIZE_URL = 'https://oauth.vk.com/authorize'
+
 VERSION = '5.63'
 APP_ID = 5863643
 api_address = 'https://api.vk.com/method/'
@@ -31,14 +31,12 @@ except KeyError:
     print("Список друзей закрыт")
 
 # получаем количество подписчиков
-# TODO выводить сколько обработано подписчиков из общего коичества
 followers_method = 'users.getFollowers'
 response2 = requests.get(api_address + followers_method, params)
 followers_count = response2.json()['response']['count']
 print("Общее количество подписчиков:", followers_count)
 
 # получаем список подписчиков
-# TODO завернуть этот метод в execute иначе будет слишком долго
 all_followers = []
 offset_parm = 0
 print("Получаю список подписчиков...")
@@ -57,7 +55,6 @@ for i in range(followers_count // 1000 + 1):
     time.sleep(.200)
 
 all_followers.extend(friends_list)
-# print(all_followers)
 all_followers_count = len(all_followers)
 divided_list = list_div(all_followers)
 
@@ -107,4 +104,4 @@ print('\n'"Формирование файла top100.json", )
 with open("top100.json", 'w') as t:
     t.write(top_100)
 
-# TODO вторая часть - получить 5 первыйх групп и инфу о их подписчиках метод groups.getMembers
+
