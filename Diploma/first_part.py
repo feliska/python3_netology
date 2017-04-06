@@ -37,17 +37,12 @@ followers_count = response2.json()['response']['count']
 print("Общее количество подписчиков:", followers_count)
 
 # получаем список подписчиков
+print("Получаю список подписчиков...")
 all_followers = []
 offset_parm = 0
-print("Получаю список подписчиков...")
 for i in range(followers_count // 1000 + 1):
-    params = {
-        'user_id': user_id,
-        'access_token': access_token,
-        'v': VERSION,
-        'offset': offset_parm,
-        'count': 1000
-    }
+    params['count'] = 1000
+    params['offset'] = offset_parm
     response3 = requests.get(api_address + followers_method, params)
     followers_list = response3.json()['response']['items']
     all_followers.extend(followers_list)
@@ -57,7 +52,7 @@ for i in range(followers_count // 1000 + 1):
 all_followers.extend(friends_list)
 all_followers_count = len(all_followers)
 divided_list = list_div(all_followers)
-
+# получение id групп, в которых состоят подписчики
 method = 'execute?access_token=' + access_token + '&code='
 print("Обработка групп, в которых состоят подписчики ...")
 merge_list = []
@@ -79,12 +74,12 @@ for l in divided_list:
             r.remove(i)
         else:
             merge_list.append(i)
-# print(merge_list)
+
 full_merge_list = sum(merge_list, [])
-# print(full_merge_list)
+
 print("Топ 100 групп, в которых состоят подписчики:", end='\n')
 top_groups = Counter(full_merge_list).most_common(100)
-# print(top_groups)
+
 top_groups_list = []
 for group, k in top_groups:
     group_name_method = 'groups.getById'
@@ -99,6 +94,7 @@ for group, k in top_groups:
     a = {'title': name, 'count': k, 'id': group}
     top_groups_list.append(a)
     time.sleep(.200)
+
 top_100 = json.dumps(top_groups_list, ensure_ascii=False)
 print('\n'"Формирование файла top100.json", )
 with open("top100.json", 'w') as t:
