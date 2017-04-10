@@ -34,9 +34,10 @@ def friends_get(id_of_user):
 # получение количества подписчиков и их списка
 def followers_get(id_of_user):
     params = {'user_id': id_of_user, 'access_token': ACCESS_TOKEN, 'v': VERSION, 'count': 1000}
-    followers_count = api_request('users.getFollowers', params)['count']
+    followers = api_request('users.getFollowers', params)
+    followers_count = followers['count']
     print("Общее количество подписчиков:", followers_count)
-    followers_list = api_request('users.getFollowers', params)['items']
+    followers_list = followers['items']
     all_followers.extend(followers_list)
     return all_followers
 
